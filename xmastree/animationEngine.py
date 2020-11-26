@@ -4,6 +4,7 @@ import _thread
 from xmastree.animations.RandomColor import RandomColor
 from xmastree.animations.OneByOne import OneByOne
 from xmastree.animations.HueCycle import HueCycle
+from xmastree.animations.XMasVibes import XMasVibes
 import threading
 
 #tree = RGBXmasTree()
@@ -11,7 +12,8 @@ import threading
 animations = {
     "random": RandomColor,
     "onebyone": OneByOne,
-    "huecycle": HueCycle
+    "huecycle": HueCycle,
+    "xmasvibes": XMasVibes
 }
 
 thread = None

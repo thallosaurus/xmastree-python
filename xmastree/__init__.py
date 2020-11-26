@@ -26,7 +26,7 @@ def create_app():
     if useTree == "Fake":
       tree = FakeTree()
     else:
-      tree = RGBXmasTree()
+      tree = RGBXmasTree(brightness=0.1)
 
     tree.on()
     global isOn
