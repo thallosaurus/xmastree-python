@@ -11,6 +11,9 @@
 <body>
 	<main>
 		<div class="block">
+			<h1>RGB Weihnachtsbaum</h1>
+		</div>
+		<div class="block">
 			<input type="color" id="colorPicker" name="colorPicker">
 			<label for="colorPicker">Farbe</label>
 		</div>
@@ -25,6 +28,11 @@
 				{% endfor %}
 			</select>
 			<label for="ans">Animation</label>
+		</div>
+		<div class="block">
+			<input id="onBtn" type="button" onclick="on()" value="Einschalten">
+			<input id="offBtn" type="button" onclick="off()" value="Ausschalten">
+			<label>Baum ein- und ausschalten</label>
 		</div>
 	</main>
 </body>

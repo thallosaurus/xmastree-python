@@ -9,6 +9,8 @@ import os
 #from gevent.pywsgi import WSGIServer
 
 tree = None
+isOn = False
+lastColor = None
 
 def create_app():
     app = Flask(__name__)
@@ -26,6 +28,10 @@ def create_app():
     else:
       tree = RGBXmasTree()
 
+    tree.on()
+    global isOn
+    isOn = True
+
     @app.route("/")
     def get_index():
         return render_template('index.html', anims=animations, keys=animations.keys())
@@ -33,12 +39,23 @@ def create_app():
     @app.route("/off/")
     def off():
         stopAnimation()
+        global isOn
+        isOn = False
         tree.off()
         return json_r(get_status())
 
     @app.route("/on/")
     def on():
+        global isOn
+        isOn = True
+
+        #global lastColor
+        #if lastColor == None:
         tree.on()
+        #    lastColor = tree.color
+        #else:
+        #    tree.color = lastColor
+        
         return json_r(get_status())
 
     @app.route('/status/')
@@ -49,7 +66,14 @@ def create_app():
     def set_color(color):
         stopAnimation()
         try:
-            tree.color = hex_to_rgb(color)
+            col = hex_to_rgb(color)
+            print(col)
+            if col == (0.0,0.0,0.0):
+                off()
+            else:
+                global isOn
+                isOn = True
+                tree.color = col
             return json_r(get_status())
         except ValueError:
             return json_r(get_error("Not a Hex-Number"))
@@ -61,7 +85,9 @@ def create_app():
 
     @app.route('/play/<name>')
     def play_animation(name):
-        global tree
+        #global lastColor
+        #global tree
+        #lastColor = tree.color
         playAnimation(tree, name)
         return json_r(get_status())
 
@@ -86,12 +112,14 @@ def rgb_to_hex(rgb):
 
 
 def get_status():
+    global isOn
     return json.dumps({
         'status': 0,
         'brightness': tree.brightness,
         'color': tree.color,
         'threads': getThreadingInfos(),
-        'animation': getAnimationState()
+        'animation': getAnimationState(),
+        'on': isOn
     })
 
 
