@@ -1,0 +1,10 @@
+click==7.1.2
+colorzero==1.1
+Flask==1.1.2
+gpiozero==1.5.1
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+waitress==1.4.4
+Werkzeug==1.0.1
+-e git+https://github.com/thallosaurus/xmastree-python.git@38770ec2f940317176afd0591a525973dcb760c1#egg=xmastree

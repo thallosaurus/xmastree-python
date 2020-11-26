@@ -4,6 +4,7 @@ from flask import Flask, send_from_directory, make_response, render_template
 from .tree import RGBXmasTree
 from .debugTree import FakeTree
 import json
+import os
 #from gevent.pywsgi import WSGIServer
 
 tree = None
@@ -11,20 +12,25 @@ tree = None
 def create_app():
     app = Flask(__name__)
 
-    config = {
-      "useRealTree": False
-    }
+    try:
+        useTree = os.environ["TREE"]
+    except KeyError:
+        useTree = "Real"
+
+    #config = {
+    #  "useFakeTree": simulateTree
+    #}
 
     print(__name__)
 
-    app.config.update(config)
+    #app.config.update(config)
 
 
     global tree
-    if app.config["useRealTree"] == True:
-      tree = RGBXmasTree()
-    else:
+    if useTree == "Fake":
       tree = FakeTree()
+    else:
+      tree = RGBXmasTree()
 
     @app.route("/")
     def get_index():
