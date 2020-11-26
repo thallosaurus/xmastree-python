@@ -1,13 +1,32 @@
 <html>
-	<head>
-		<title>Test</title>
-		<script src="{{ url_for('static', filename='main.js') }}"></script>
-		<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-	</head>
 
-	<body>
-		<h1>It works</h1>
-		<input type="color" id="colorPicker">
-		<input type="range" id="brightness">
-	</body>
+<head>
+	<title>Test</title>
+	<script src="{{ url_for('static', filename='main.js') }}"></script>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+</head>
+
+<body>
+	<main>
+		<div class="block">
+			<input type="color" id="colorPicker" name="colorPicker">
+			<label for="colorPicker">Farbe</label>
+		</div>
+		<div class="block">
+			<input type="range" id="brightness" name="brightness">
+			<label for="brightness">Helligkeit</label>
+		</div>
+		<div class="block">
+			<select name="ans" id="animationPicker">
+				{% for i in keys %}
+				<option value="{{ i }}">{{ i }}</option>
+				{% endfor %}
+			</select>
+			<label for="ans">Animation</label>
+		</div>
+	</main>
+</body>
+
 </html>

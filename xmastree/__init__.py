@@ -3,6 +3,7 @@ from flask import Flask, send_from_directory, make_response, render_template
 #from debugTree import FakeTree
 from .tree import RGBXmasTree
 from .debugTree import FakeTree
+from .animationEngine import playAnimation, stopAnimation, getAnimationState, animations, getThreadingInfos
 import json
 import os
 #from gevent.pywsgi import WSGIServer
@@ -17,14 +18,7 @@ def create_app():
     except KeyError:
         useTree = "Real"
 
-    #config = {
-    #  "useFakeTree": simulateTree
-    #}
-
     print(__name__)
-
-    #app.config.update(config)
-
 
     global tree
     if useTree == "Fake":
@@ -34,10 +28,11 @@ def create_app():
 
     @app.route("/")
     def get_index():
-        return render_template('index.html')
+        return render_template('index.html', anims=animations, keys=animations.keys())
 
     @app.route("/off/")
     def off():
+        stopAnimation()
         tree.off()
         return json_r(get_status())
 
@@ -46,16 +41,13 @@ def create_app():
         tree.on()
         return json_r(get_status())
 
-    #@app.route("/<path:path>")
-    #def send(path):
-    #    return send_from_directory('client', path)
-
     @app.route('/status/')
     def status():
         return json_r(get_status())
 
     @app.route('/set/color/<color>/')
     def set_color(color):
+        stopAnimation()
         try:
             tree.color = hex_to_rgb(color)
             return json_r(get_status())
@@ -67,13 +59,13 @@ def create_app():
         tree.brightness = int(intensity) / 100
         return json_r(get_status())
 
+    @app.route('/play/<name>')
+    def play_animation(name):
+        global tree
+        playAnimation(tree, name)
+        return json_r(get_status())
+
     return app
-
-# @app.after_request
-# def add_header(response):
-#  response.headers['Content-type'] = 'application/json'
-#  return response
-
 
 def json_r(status):
     resp = make_response(status)
@@ -82,7 +74,6 @@ def json_r(status):
 
 
 def hex_to_rgb(value):
-    # value = value.lstrip('#')
     lv = len(value)
     v = tuple(int(value[i:i + lv // 3], 16) for i in range(0, lv, lv // 3))
     normalized = (v[0] / 255, v[1] / 255, v[2] / 255)
@@ -95,7 +86,13 @@ def rgb_to_hex(rgb):
 
 
 def get_status():
-    return json.dumps({'status': 0, 'brightness': tree.brightness, 'color': tree.color})
+    return json.dumps({
+        'status': 0,
+        'brightness': tree.brightness,
+        'color': tree.color,
+        'threads': getThreadingInfos(),
+        'animation': getAnimationState()
+    })
 
 
 def get_error(msg):

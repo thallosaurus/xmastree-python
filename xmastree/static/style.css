@@ -1,0 +1,25 @@
+body {
+    transition: background-color .2s linear;
+    margin: 0;
+}
+
+main > * {
+    display: block;
+    width: 100vw;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#colorPicker {
+    width: 50vw;
+    height: 25vh;
+}
+
+label {
+    display: block;
+}
+
+main {
+    margin: 0 auto;
+}
