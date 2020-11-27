@@ -12,7 +12,7 @@ function sendRequest(route_mask, path = "") {
     fetch(route_mask + path)
       .then(response => response.json())
       .then(data => {
-        updateInputs(data)
+        // updateInputs(data)
         res(data)
       });
   });
@@ -42,6 +42,8 @@ window.onload = async function () {
 
   onBtn = document.querySelector("#onBtn");
   offBtn = document.querySelector("#offBtn");
+
+  initSocket();
   
   sendRequest(STATUS_ROUTE);
   //updateInputs(r);
@@ -56,7 +58,11 @@ function updateInputs(status) {
     }
     picker.value = floatToHex(status.color);
     brightnessControl.value = status.brightness * 100;
-    document.body.style.backgroundColor = floatToHex(status.color);
+
+    //Set color only in socket io responses
+    // if (status.origin != "http") {
+      document.body.style.backgroundColor = floatToHex(status.color);
+    // }
     onBtn.disabled = status.on
     offBtn.disabled = !status.on
 

@@ -3,7 +3,9 @@ from flask import Flask, send_from_directory, make_response, render_template
 #from debugTree import FakeTree
 from .tree import RGBXmasTree
 from .debugTree import FakeTree
-from .animationEngine import playAnimation, stopAnimation, getAnimationState, animations, getThreadingInfos
+from .animationEngine import playAnimation, stopAnimation, animations, getThreadingInfos, getAnimationState
+from .socketConnection import initSocket, sendToClients
+
 import json
 import os
 #from gevent.pywsgi import WSGIServer
@@ -14,6 +16,7 @@ lastColor = None
 
 def create_app():
     app = Flask(__name__)
+    initSocket(app)
 
     try:
         useTree = os.environ["TREE"]
@@ -60,6 +63,7 @@ def create_app():
 
     @app.route('/status/')
     def status():
+
         return json_r(get_status())
 
     @app.route('/set/color/<color>/')
@@ -74,6 +78,7 @@ def create_app():
                 global isOn
                 isOn = True
                 tree.color = col
+            # socketio.emit("status", get_status("socket"), broadcast=True)
             return json_r(get_status())
         except ValueError:
             return json_r(get_error("Not a Hex-Number"))
@@ -113,7 +118,7 @@ def rgb_to_hex(rgb):
 
 def get_status():
     global isOn
-    return json.dumps({
+    s = json.dumps({
         'status': 0,
         'brightness': tree.brightness,
         'color': tree.color,
@@ -121,6 +126,8 @@ def get_status():
         'animation': getAnimationState(),
         'on': isOn
     })
+    sendToClients(s)
+    return s
 
 
 def get_error(msg):

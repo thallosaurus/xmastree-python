@@ -1,10 +1,17 @@
 click==7.1.2
 colorzero==1.1
+dnspython==1.16.0
+eventlet==0.29.1
 Flask==1.1.2
+Flask-SocketIO==4.3.1
 gpiozero==1.5.1
+greenlet==0.4.17
 itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
+python-engineio==3.13.2
+python-socketio==4.6.0
+six==1.15.0
 waitress==1.4.4
 Werkzeug==1.0.1
--e git+https://github.com/thallosaurus/xmastree-python.git@38770ec2f940317176afd0591a525973dcb760c1#egg=xmastree
+-e git+https://github.com/thallosaurus/xmastree-python.git@8f622164fb8c83ab723347f42d2d2d5df9aeb691#egg=xmastree
